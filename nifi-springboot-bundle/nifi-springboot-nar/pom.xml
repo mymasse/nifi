@@ -23,7 +23,6 @@
     </parent>
 
     <artifactId>nifi-springboot-nar</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
     <packaging>nar</packaging>
     <properties>
         <maven.javadoc.skip>true</maven.javadoc.skip>

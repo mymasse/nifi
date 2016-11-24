@@ -22,13 +22,13 @@ import org.junit.Before;
 import org.junit.Test;
 
 
-public class MyProcessorTest {
+public class SpringBootProcessorTest {
 
     private TestRunner testRunner;
 
     @Before
     public void init() {
-        testRunner = TestRunners.newTestRunner(MyProcessor.class);
+        testRunner = TestRunners.newTestRunner(SpringBootProcessor.class);
     }
 
     @Test
