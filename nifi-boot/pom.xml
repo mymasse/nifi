@@ -43,15 +43,12 @@
 
 	<build>
 		<plugins>
-			<plugin>
-				<groupId>org.springframework.boot</groupId>
-				<artifactId>spring-boot-maven-plugin</artifactId>
-			</plugin>
+			<!-- <plugin> <groupId>org.springframework.boot</groupId> <artifactId>spring-boot-maven-plugin</artifactId> 
+				</plugin> -->
 			<plugin>
 				<artifactId>maven-shade-plugin</artifactId>
 				<configuration>
-					<shadedArtifactAttached>true</shadedArtifactAttached>
-					<shadedClassifierName>nifi</shadedClassifierName>
+					<createDependencyReducedPom>false</createDependencyReducedPom>
 				</configuration>
 			</plugin>
 		</plugins>
