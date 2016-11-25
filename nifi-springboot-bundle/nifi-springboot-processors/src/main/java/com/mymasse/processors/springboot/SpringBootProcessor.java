@@ -146,8 +146,9 @@ public class SpringBootProcessor extends AbstractProcessor {
 
     @Override
     protected Collection<ValidationResult> customValidate(final ValidationContext validationContext) {
-        SpringBootConfigValidator validator = new SpringBootConfigValidator();
-        return Collections.singletonList(validator.validate(BOOT_JAR_PATH.getName(), null, validationContext));
+        // SpringBootConfigValidator validator = new SpringBootConfigValidator();
+        // return Collections.singletonList(validator.validate(BOOT_JAR_PATH.getName(), null, validationContext));
+        return Collections.emptySet();
     }
 
     @OnScheduled
@@ -205,7 +206,7 @@ public class SpringBootProcessor extends AbstractProcessor {
         boolean sent = false;
 
         try {
-            // sent = this.exchanger.send(payload, flowFileToProcess.getAttributes(), this.sendTimeout);
+            sent = this.exchanger.send(payload, flowFileToProcess.getAttributes(), this.sendTimeout);
             if (sent) {
                 processSession.getProvenanceReporter().send(flowFileToProcess, this.springBootJarFile);
                 processSession.remove(flowFileToProcess);
@@ -233,8 +234,7 @@ public class SpringBootProcessor extends AbstractProcessor {
     }
 
     private void receiveFromSpring(ProcessSession processSession) {
-        // final SpringResponse<?> msgFromSpring = this.exchanger.receive(this.receiveTimeout);
-        final SpringResponse<?> msgFromSpring = null;
+        final SpringResponse<?> msgFromSpring = this.exchanger.receive(this.receiveTimeout);
         if (msgFromSpring != null) {
             FlowFile flowFileToProcess = processSession.create();
             flowFileToProcess = processSession.write(flowFileToProcess, new OutputStreamCallback() {
@@ -271,7 +271,7 @@ public class SpringBootProcessor extends AbstractProcessor {
             if (bootClass != null && bootJarPath != null) {
                 validateJar(bootJarPath, invalidationMessageBuilder);
 
-                if (invalidationMessageBuilder.length() == 0 && !isClassResolvable(bootClass + ".java", new File(bootJarPath))) {
+                if (invalidationMessageBuilder.length() == 0 && !isClassResolvable(bootClass, new File(bootJarPath))) {
                     invalidationMessageBuilder.append("'Spring Boot Application class name' can not be located in the provided jar.");
                 }
             } else if (StringUtils.isEmpty(bootClass)) {
