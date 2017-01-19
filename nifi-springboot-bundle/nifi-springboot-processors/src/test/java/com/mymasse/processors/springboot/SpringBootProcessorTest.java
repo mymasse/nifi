@@ -28,47 +28,47 @@ import org.junit.Test;
 
 public class SpringBootProcessorTest {
 
-    private static final String TEST_APPLICATION_CLASS = "com.mymasse.nifi.NifiBootApplication";
-    private static final String TEST_BOOT_JAR = "src/test/resources/bidirectional.jar";
+  private static final String TEST_APPLICATION_CLASS = "com.mymasse.nifi.NifiBootApplication";
+  private static final String TEST_BOOT_JAR = "src/test/resources/nifi-boot-0.0.1-SNAPSHOT.jar";
 
-    @Test
-    public void validationTests() {
-        TestRunner runner = TestRunners.newTestRunner(SpringBootProcessor.class);
-        runner.assertNotValid();
+  @Test
+  public void validationTests() {
+    TestRunner runner = TestRunners.newTestRunner(SpringBootProcessor.class);
+    runner.assertNotValid();
 
-        runner = TestRunners.newTestRunner(SpringBootProcessor.class);
-        runner.setProperty(SpringBootProcessor.BOOT_CLASS, TEST_APPLICATION_CLASS);
-        runner.assertNotValid();
+    runner = TestRunners.newTestRunner(SpringBootProcessor.class);
+    runner.setProperty(SpringBootProcessor.BOOT_CLASS, TEST_APPLICATION_CLASS);
+    runner.assertNotValid();
 
-        runner = TestRunners.newTestRunner(SpringBootProcessor.class);
-        runner.setProperty(SpringBootProcessor.BOOT_JAR_PATH, "not/found/file.jar");
-        runner.assertNotValid();
+    runner = TestRunners.newTestRunner(SpringBootProcessor.class);
+    runner.setProperty(SpringBootProcessor.BOOT_JAR_PATH, "not/found/file.jar");
+    runner.assertNotValid();
 
-        runner = TestRunners.newTestRunner(SpringBootProcessor.class);
-        runner.setProperty(SpringBootProcessor.BOOT_JAR_PATH, TEST_BOOT_JAR);
-        runner.assertNotValid();
+    runner = TestRunners.newTestRunner(SpringBootProcessor.class);
+    runner.setProperty(SpringBootProcessor.BOOT_JAR_PATH, TEST_BOOT_JAR);
+    runner.assertNotValid();
 
-        runner = TestRunners.newTestRunner(SpringBootProcessor.class);
-        runner.setProperty(SpringBootProcessor.BOOT_CLASS, TEST_APPLICATION_CLASS);
-        runner.setProperty(SpringBootProcessor.BOOT_JAR_PATH, TEST_BOOT_JAR);
-        runner.assertValid();
-    }
+    runner = TestRunners.newTestRunner(SpringBootProcessor.class);
+    runner.setProperty(SpringBootProcessor.BOOT_CLASS, TEST_APPLICATION_CLASS);
+    runner.setProperty(SpringBootProcessor.BOOT_JAR_PATH, TEST_BOOT_JAR);
+    runner.assertValid();
+  }
 
-    @Test
-    public void runTest() {
-        TestRunner runner = TestRunners.newTestRunner(SpringBootProcessor.class);
-        runner.setProperty(SpringBootProcessor.BOOT_CLASS, TEST_APPLICATION_CLASS);
-        runner.setProperty(SpringBootProcessor.BOOT_JAR_PATH, TEST_BOOT_JAR);
-        runner.assertValid();
+  @Test
+  public void runTest() {
+    TestRunner runner = TestRunners.newTestRunner(SpringBootProcessor.class);
+    runner.setProperty(SpringBootProcessor.BOOT_CLASS, TEST_APPLICATION_CLASS);
+    runner.setProperty(SpringBootProcessor.BOOT_JAR_PATH, TEST_BOOT_JAR);
+    runner.assertValid();
 
-        runner.enqueue("Hello".getBytes());
+    runner.enqueue("Hello".getBytes());
 
-        runner.run(1, false);
+    runner.run(1, false);
 
-        List<MockFlowFile> ffList = runner.getFlowFilesForRelationship(SpringBootProcessor.REL_SUCCESS);
-        assertTrue(ffList.size() == 1);
-        assertEquals("Yes it works", ffList.get(0).getAttribute("NiFiContext"));
-        runner.shutdown();
-    }
+    List<MockFlowFile> ffList = runner.getFlowFilesForRelationship(SpringBootProcessor.REL_SUCCESS);
+    assertTrue(ffList.size() == 1);
+    assertEquals("Yes it works", ffList.get(0).getAttribute("NiFiContext"));
+    runner.shutdown();
+  }
 
 }

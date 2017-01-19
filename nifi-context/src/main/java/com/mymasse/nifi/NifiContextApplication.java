@@ -17,22 +17,20 @@ import org.springframework.messaging.MessageChannel;
 @EnableIntegration
 public class NifiContextApplication {
 
-    @Bean(name = SpringNiFiConstants.FROM_NIFI)
-    public MessageChannel fromNiFi() {
-        return MessageChannels.direct().get();
-    }
+  @Bean(name = SpringNiFiConstants.FROM_NIFI)
+  public MessageChannel fromNiFi() {
+    return MessageChannels.direct().get();
+  }
 
-    @Bean(name = SpringNiFiConstants.TO_NIFI)
-    public MessageChannel toNiFi() {
-        return MessageChannels.queue().get();
-    }
+  @Bean(name = SpringNiFiConstants.TO_NIFI)
+  public MessageChannel toNiFi() {
+    return MessageChannels.queue().get();
+  }
 
-    @Bean
-    public IntegrationFlow mainFlow() {
-        return IntegrationFlows.from(fromNiFi())
-                .enrichHeaders(h -> h.header("NiFiContext", "Yes it works"))
-                .channel(toNiFi())
-                .get();
-    }
+  @Bean
+  public IntegrationFlow mainFlow() {
+    return IntegrationFlows.from(fromNiFi()).enrichHeaders(h -> h.header("NiFiContext", "Yes it works"))
+        .channel(toNiFi()).get();
+  }
 
 }
