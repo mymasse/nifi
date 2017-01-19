@@ -146,9 +146,8 @@ public class SpringBootProcessor extends AbstractProcessor {
 
     @Override
     protected Collection<ValidationResult> customValidate(final ValidationContext validationContext) {
-        // SpringBootConfigValidator validator = new SpringBootConfigValidator();
-        // return Collections.singletonList(validator.validate(BOOT_JAR_PATH.getName(), null, validationContext));
-        return Collections.emptySet();
+        SpringBootConfigValidator validator = new SpringBootConfigValidator();
+        return Collections.singletonList(validator.validate(BOOT_JAR_PATH.getName(), null, validationContext));
     }
 
     @OnScheduled
@@ -312,9 +311,11 @@ public class SpringBootProcessor extends AbstractProcessor {
             urls.addAll(SpringBootFactory.gatherClassPathUrls(bootJarPathFile.getAbsolutePath()));
             boolean resolvable = false;
             try (URLClassLoader throwawayCl = new URLClassLoader(urls.toArray(new URL[] {}), null)) {
-                resolvable = throwawayCl.findResource(classFilename) != null;
+                resolvable = throwawayCl.loadClass(classFilename) != null;
             } catch (IOException e) {
                 // ignore since it can only happen on CL.close()
+            } catch (ClassNotFoundException e) {
+                resolvable = false;
             }
             return resolvable;
         }
